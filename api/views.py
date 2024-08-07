@@ -43,7 +43,7 @@ def get_routes(request):
 
 @api_view(['GET'])
 def get_notes(request):
-    notes = Note.objects.all()
+    notes = Note.objects.all().order_by('-updated')
     serializer = NoteSerializer(notes, many=True)
     return Response(serializer.data)
 
@@ -53,3 +53,20 @@ def get_note(request, pk):
     note = Note.objects.get(id=pk)
     serializer = NoteSerializer(note, many=False)
     return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def update_note(request, pk):
+    data = request.data
+    note = Note.objects.get(pk=pk)
+    serializer = NoteSerializer(instance=note, data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+
+@api_view(['DELETED'])
+def delete_note(request, pk):
+    note = Note.objects.get(pk=pk)
+    note.delete()
+    return Response('Note was deleted')
