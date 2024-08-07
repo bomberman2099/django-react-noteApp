@@ -11,12 +11,14 @@ import NotePage from './pages/NotePage';
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Header/>
-        <Routes>
-          <Route path="/" exact element={<NoteListPage/>} />
-          <Route path="/note/:id" exact element={<NotePage/>} />
-        </Routes>
+      <div className="container dark">
+        <div className='app'>
+          <Header/>
+          <Routes>
+            <Route path="/" exact element={<NoteListPage/>} />
+            <Route path="/note/:id" exact element={<NotePage/>} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
