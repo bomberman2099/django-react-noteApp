@@ -12,11 +12,21 @@ const NotePage = () => {
     }, [id]);
 
     let getNote = async () => {
-        let response = await fetch(`http://127.0.0.1:8000/api/note/${id}`);
+        if (id === "new") return
+        let response = await fetch(`http://127.0.0.1:8000/api/note/${id}`); 
         let data = await response.json();
         setNote(data);
     };
 
+    let createNote = async () => {
+        await fetch(`http://127.0.0.1:8000/api/note/create/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(note),
+        });
+    };
     let updateNote = async () => {
         await fetch(`http://127.0.0.1:8000/api/note/${id}/update/`, {
             method: 'PUT',
@@ -37,7 +47,13 @@ const NotePage = () => {
     }
 
     let handleSubmit = () => {
-        updateNote();
+        if(id !=="new" && !note.body){
+            deleteNote()
+        } else if(id !=="new"){
+            updateNote()
+        } else if(id === 'new' && note !== null){
+            createNote()
+        }
         navigate('/');
     };
 
@@ -54,9 +70,12 @@ const NotePage = () => {
             <div className="note-header">
                 <h3>
                     <Arrow onClick={handleSubmit} />
-                    
                 </h3>
-                <button onClick={deleteNote}>Delete</button>
+                {id !== 'new'? 
+                    <button onClick={deleteNote}>Delete</button>
+                    :
+                    <button onClick={handleSubmit}>Done</button>
+                }
             </div>
             <textarea
                 onChange={handleChange}
